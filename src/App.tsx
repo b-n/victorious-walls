@@ -44,8 +44,9 @@ const useInput = ({ id, label, extent, initialValue }: UseInputOptions): [number
   const [value, setValue] = useState(initialValue);
   const input = (
     <div>
-      <label htmlFor={id}>{label}</label>
+      <label className="controls-label" htmlFor={id}>{label}</label>
       <input
+        className="controls-range"
         id={id}
         value={value}
         onChange={e => setValue(+e.target.value)}
@@ -53,16 +54,37 @@ const useInput = ({ id, label, extent, initialValue }: UseInputOptions): [number
         min={extent[0]}
         max={extent[1]}
       />
+      <span className="controls-value">{value}</span>
     </div>
   )
   return [value, input];
 }
 
 const App: React.FC = () => {
-  const [tileWidth, tileWidthInput] = useInput({ id: "tile-width", label: "Tile Width", extent: [10, 200], initialValue: 151});
-  const [tileHeight, tileHeightInput] = useInput({ id: "tile-height", label: "Tile Height", extent: [10, 200], initialValue: 151});
-  const [wallWidth, wallWidthInput] = useInput({ id: "wall-width", label: "Wall Width", extent: [tileWidth*2, 2000], initialValue: 1000});
-  const [wallHeight, wallHeightInput] = useInput({ id: "wall-height", label: "Wall Height", extent: [tileHeight*2, 2000], initialValue: 1000});
+  const [tileWidth, tileWidthInput] = useInput({
+    id: "tile-width",
+    label: "Tile Width",
+    extent: [10, 200],
+    initialValue: 151
+  });
+  const [tileHeight, tileHeightInput] = useInput({
+    id: "tile-height",
+    label: "Tile Height",
+    extent: [10, 200],
+    initialValue: 151
+  });
+  const [wallWidth, wallWidthInput] = useInput({
+    id: "wall-width",
+    label: "Wall Width",
+    extent: [tileWidth*2, 2000],
+    initialValue: tileWidth*3
+  });
+  const [wallHeight, wallHeightInput] = useInput({
+    id: "wall-height",
+    label: "Wall Height",
+    extent: [tileHeight*2, 2000],
+    initialValue: tileHeight*2
+  });
 
   const totalTiles = {
     x: Math.floor(wallWidth / tileWidth - 1),
@@ -92,11 +114,26 @@ const App: React.FC = () => {
 
           return (
             <>
-              <Tile x={0} y={rowY} width={splitTile.width} height={rowHeight} />
+              <Tile
+                x={0}
+                y={rowY}
+                width={splitTile.width}
+                height={rowHeight}
+              />
               {Array(totalTiles.x).fill(0).map((_, j) => (
-                <Tile x={splitTile.width + j * tileWidth} y={rowY} width={tileWidth} height={rowHeight} />
+                <Tile
+                  x={splitTile.width + j * tileWidth}
+                  y={rowY}
+                  width={tileWidth}
+                  height={rowHeight}
+                />
               ))}
-              <Tile x={splitTile.width + totalTiles.x * tileWidth} y={rowY} width={splitTile.width} height={rowHeight} />
+              <Tile
+                x={splitTile.width + totalTiles.x * tileWidth}
+                y={rowY}
+                width={splitTile.width}
+                height={rowHeight}
+              />
             </>
           )
         })}
