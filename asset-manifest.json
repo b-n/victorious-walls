@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/victorious-walls/static/css/main.232612aa.css",
+    "main.js": "/victorious-walls/static/js/main.ac852760.js",
+    "static/js/787.e76567e1.chunk.js": "/victorious-walls/static/js/787.e76567e1.chunk.js",
+    "index.html": "/victorious-walls/index.html",
+    "main.232612aa.css.map": "/victorious-walls/static/css/main.232612aa.css.map",
+    "main.ac852760.js.map": "/victorious-walls/static/js/main.ac852760.js.map",
+    "787.e76567e1.chunk.js.map": "/victorious-walls/static/js/787.e76567e1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.232612aa.css",
+    "static/js/main.ac852760.js"
+  ]
+}
