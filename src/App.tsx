@@ -76,13 +76,13 @@ const App: React.FC = () => {
   const [wallWidth, wallWidthInput] = useInput({
     id: "wall-width",
     label: "Wall Width",
-    extent: [tileWidth*2, 2000],
+    extent: [tileWidth, 2000],
     initialValue: tileWidth*3
   });
   const [wallHeight, wallHeightInput] = useInput({
     id: "wall-height",
     label: "Wall Height",
-    extent: [tileHeight*2, 2000],
+    extent: [tileHeight, 2000],
     initialValue: tileHeight*2
   });
 
