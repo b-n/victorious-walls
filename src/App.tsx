@@ -8,7 +8,7 @@ interface TileOptions {
   height: number;
 }
 
-const champfer = 4;
+const chamfer = 4;
 
 
 const Tile = ({ x, y, width, height }: TileOptions) => {
@@ -23,10 +23,10 @@ const Tile = ({ x, y, width, height }: TileOptions) => {
         className="shadow-br"
       />
       <rect
-        x={x+champfer}
-        y={y+champfer}
-        width={width-champfer*2}
-        height={height-champfer*2}
+        x={x+chamfer}
+        y={y+chamfer}
+        width={width-chamfer*2}
+        height={height-chamfer*2}
         className="tile"
       />
     </> 
