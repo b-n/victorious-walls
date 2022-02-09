@@ -1,105 +1,78 @@
-import React, { ReactElement, useState } from 'react';
+import React from 'react';
 import './App.css';
-
-interface TileOptions {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-const chamfer = 4;
-
-
-const Tile = ({ x, y, width, height }: TileOptions) => {
-  return (
-    <>
-      <polyline
-        points={`${x} ${y} ${x+width} ${y} ${x} ${y+height} ${x} ${y}`}
-        className="shadow-tl"
-      />
-      <polyline
-        points={`${x} ${y+height} ${x+width} ${y} ${x+width} ${y+height} ${x} ${y+height}`}
-        className="shadow-br"
-      />
-      <rect
-        x={x+chamfer}
-        y={y+chamfer}
-        width={width-chamfer*2}
-        height={height-chamfer*2}
-        className="tile"
-      />
-    </> 
-  ) 
-}
-
-interface UseInputOptions {
-  id: string;
-  label: string;
-  extent: [number, number];
-  initialValue: number;
-}
-
-const useInput = ({ id, label, extent, initialValue }: UseInputOptions): [number, ReactElement<any>] => {
-  const [value, setValue] = useState(initialValue);
-  const input = (
-    <div>
-      <label className="controls-label" htmlFor={id}>{label}</label>
-      <input
-        className="controls-range"
-        id={id}
-        value={value}
-        onChange={e => setValue(+e.target.value)}
-        type="range"
-        min={extent[0]}
-        max={extent[1]}
-      />
-      <span className="controls-value">{value}</span>
-    </div>
-  )
-  return [value, input];
-}
+import { Tile } from './components/Tile'
+import { calculateTiles, SplitMethod } from './lib/tiles'
+import { useRangeInput } from './hooks/useRangeInput'
 
 const App: React.FC = () => {
-  const [tileWidth, tileWidthInput] = useInput({
+  const [tileWidth, tileWidthInput] = useRangeInput({
     id: "tile-width",
     label: "Tile Width",
     extent: [10, 200],
     initialValue: 151
   });
-  const [tileHeight, tileHeightInput] = useInput({
+  const [tileHeight, tileHeightInput] = useRangeInput({
     id: "tile-height",
     label: "Tile Height",
     extent: [10, 200],
     initialValue: 151
   });
-  const [wallWidth, wallWidthInput] = useInput({
+  const [wallWidth, wallWidthInput] = useRangeInput({
     id: "wall-width",
     label: "Wall Width",
     extent: [tileWidth, 2000],
     initialValue: tileWidth*3
   });
-  const [wallHeight, wallHeightInput] = useInput({
+  const [wallHeight, wallHeightInput] = useRangeInput({
     id: "wall-height",
     label: "Wall Height",
     extent: [tileHeight, 2000],
     initialValue: tileHeight*2
   });
+  const [paddingWidth, paddingWidthInput] = useRangeInput({
+    id: "padding-width",
+    label: "Padding Width",
+    extent: [0, 10],
+    initialValue: 3
+  });
+  const [paddingHeight, paddingHeightInput] = useRangeInput({
+    id: "padding-height",
+    label: "Padding Height",
+    extent: [0, 10],
+    initialValue: 3
+  });
+  const [spacingWidth, spacingWidthInput] = useRangeInput({
+    id: "spacing-width",
+    label: "Spacing Width",
+    extent: [0, 10],
+    initialValue: 3
+  });
+  const [spacingHeight, spacingHeightInput] = useRangeInput({
+    id: "spacing-height",
+    label: "Spacing Height",
+    extent: [0, 10],
+    initialValue: 3
+  });
 
-  const totalTiles = {
-    x: Math.floor(wallWidth / tileWidth - 1),
-    y: Math.floor(wallHeight / tileHeight - 1),
-  }
-
-  const remainingSpace = {
-    width: wallWidth - totalTiles.x * tileWidth,
-    height: wallHeight - totalTiles.y * tileHeight,
-  }
-
-  const splitTile = {
-    width: remainingSpace.width / 2,
-    height: remainingSpace.height / 2,
-  }
+  const tiles = calculateTiles({
+    canvas: {
+      width: wallWidth,
+      height: wallHeight,
+    },
+    tile: { 
+      width: tileWidth,
+      height: tileHeight,
+    },
+    padding: {
+      width: paddingWidth,
+      height: paddingHeight,
+    },
+    spacing: {
+      width: spacingWidth, 
+      height: spacingHeight,
+    },
+    splitTile: SplitMethod.MostFullTiles
+  })
 
   return (
     <div>
@@ -107,36 +80,19 @@ const App: React.FC = () => {
       {tileHeightInput}
       {wallWidthInput}
       {wallHeightInput}
+      {paddingWidthInput}
+      {paddingHeightInput}
+      {spacingWidthInput}
+      {spacingHeightInput}
       <svg className="viz">
-        {Array(totalTiles.y+2).fill(0).map((_, i) => {
-          const rowHeight = (i === 0 || i === totalTiles.y + 1) ? splitTile.height : tileHeight;
-          const rowY = i === 0 ? 0 : splitTile.height + (i - 1) * tileHeight;
-
-          return (
-            <>
-              <Tile
-                x={0}
-                y={rowY}
-                width={splitTile.width}
-                height={rowHeight}
-              />
-              {Array(totalTiles.x).fill(0).map((_, j) => (
-                <Tile
-                  x={splitTile.width + j * tileWidth}
-                  y={rowY}
-                  width={tileWidth}
-                  height={rowHeight}
-                />
-              ))}
-              <Tile
-                x={splitTile.width + totalTiles.x * tileWidth}
-                y={rowY}
-                width={splitTile.width}
-                height={rowHeight}
-              />
-            </>
-          )
-        })}
+        {tiles.map(({width, height, x, y}) => (
+          <Tile
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+          />
+        ))}
       </svg>
     </div>
   );

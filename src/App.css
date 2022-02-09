@@ -21,13 +21,13 @@
 .controls-label {
   color: #ccc;
   padding-right: 7px;
-  width: 100px;
+  width: 200px;
   text-align: right;
   display: inline-block;
 }
 
 .controls-range {
-  width: 250px;
+  width: 400px;
 }
 
 .controls-value {
