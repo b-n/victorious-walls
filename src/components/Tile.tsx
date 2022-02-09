@@ -9,6 +9,7 @@ interface TileOptions {
 
 const chamfer = 4;
 
+// TODO: Chamfer breaks when tile is smaller that 8 due to rect getting negative width :-(
 const Tile = ({ x, y, width, height }: TileOptions) => {
   return (
     <>

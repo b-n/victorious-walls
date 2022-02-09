@@ -1,3 +1,7 @@
+* {
+  color: #ccc;
+}
+
 .viz {
   margin: 25px;
   border: 1px solid #BBBBBB;
@@ -19,7 +23,6 @@
 }
 
 .controls-label {
-  color: #ccc;
   padding-right: 7px;
   width: 200px;
   text-align: right;
@@ -32,4 +35,16 @@
 
 .controls-value {
   color: #ccc;
+}
+
+.radio-options {
+  display: inline-block;
+}
+
+.radio-option {
+  display: inline-block;
+}
+
+.radio-label {
+  padding-right: 20px;
 }

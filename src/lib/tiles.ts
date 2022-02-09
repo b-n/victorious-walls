@@ -6,8 +6,8 @@ export interface TileDimensions {
 }
 
 export enum SplitMethod {
-  MostFullTiles,
-  AtLeastHalfSplitTiles,
+  MostFullTiles = 'Most Full Tiles',
+  AtLeastHalfSplitTiles = 'Split is at least a half tile',
 }
 
 type HasSplitTiles = boolean;
@@ -27,7 +27,7 @@ export interface CalculationOptions {
   tile: TileSize
   padding: CanvasPadding
   spacing: TileSpacing
-  splitTile: SplitMethod
+  splitMethod: SplitMethod
 }
 
 type FullTiles = number;
@@ -84,7 +84,7 @@ const getTileSizes = (options: CalculationOptions): TileSizingFunction => {
     }
 
     // At least half a tile = removing one of the full tiles
-    if (options.splitTile === SplitMethod.AtLeastHalfSplitTiles) {
+    if (options.splitMethod === SplitMethod.AtLeastHalfSplitTiles) {
       fullTiles -= 1;
     }
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import './App.css';
-import { Tile } from './components/Tile'
-import { calculateTiles, SplitMethod } from './lib/tiles'
-import { useRangeInput } from './hooks/useRangeInput'
+import './Main.css';
+import { Tile } from '../components/Tile'
+import { calculateTiles, SplitMethod } from '../lib/tiles'
+import { useRangeInput } from '../hooks/useRangeInput'
+import { useRadioInput } from '../hooks/useRadioInput'
 
 const App: React.FC = () => {
   const [tileWidth, tileWidthInput] = useRangeInput({
@@ -53,6 +54,16 @@ const App: React.FC = () => {
     extent: [0, 10],
     initialValue: 3
   });
+  const [splitMethod, splitMethodInput] = useRadioInput<SplitMethod>({
+    id: 'split-method',
+    name: 'split-method',
+    label: 'Split Method',
+    options: [
+      SplitMethod.MostFullTiles,
+      SplitMethod.AtLeastHalfSplitTiles,
+    ],
+    initialValue: SplitMethod.AtLeastHalfSplitTiles,
+  })
 
   const tiles = calculateTiles({
     canvas: {
@@ -71,7 +82,7 @@ const App: React.FC = () => {
       width: spacingWidth, 
       height: spacingHeight,
     },
-    splitTile: SplitMethod.MostFullTiles
+    splitMethod: splitMethod,
   })
 
   return (
@@ -84,6 +95,7 @@ const App: React.FC = () => {
       {paddingHeightInput}
       {spacingWidthInput}
       {spacingHeightInput}
+      {splitMethodInput}
       <svg className="viz">
         {tiles.map(({width, height, x, y}) => (
           <Tile
