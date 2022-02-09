@@ -22,19 +22,18 @@
   fill: #999;
 }
 
-.controls-label {
+.label {
   padding-right: 7px;
   width: 200px;
   text-align: right;
   display: inline-block;
+  vertical-align: top;
 }
 
-.controls-range {
-  width: 400px;
-}
-
-.controls-value {
-  color: #ccc;
+.dimension .value {
+  width: 120px;  
+  text-align: right;
+  background-color: #181818;
 }
 
 .radio-options {
@@ -42,9 +41,14 @@
 }
 
 .radio-option {
-  display: inline-block;
+  display: block;
 }
 
-.radio-label {
-  padding-right: 20px;
+.summary-table .header-label {
+  width: 200px;
+  text-align: right;
+}
+
+.summary-table .row-label {
+  text-align: right;
 }

@@ -6,6 +6,7 @@ interface UseRadioInputRadios<T> {
   name: string;
   options: T[];
   initialValue: T;
+  className?: string;
 }
 
 const useRadioInput = <T extends unknown>({
@@ -13,13 +14,14 @@ const useRadioInput = <T extends unknown>({
   label, 
   name,
   options,
-  initialValue
+  initialValue,
+  className
 }: UseRadioInputRadios<T>): [T, ReactElement<any>] => {
   const [value, setValue] = useState<T>(initialValue);
 
   const input = (
-    <div>
-      <div className="controls-label">{label}</div>
+    <div className={className}>
+      <div className="label">{label}</div>
       <div className="radio-options">
         {options.map((option: T) => (
           <div className="radio-option">

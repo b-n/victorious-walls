@@ -1,16 +1,9 @@
-import React from 'react'
-
-interface TileOptions {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import { TileDimensions } from '../lib/tiles'
 
 const chamfer = 4;
 
 // TODO: Chamfer breaks when tile is smaller that 8 due to rect getting negative width :-(
-const Tile = ({ x, y, width, height }: TileOptions) => {
+const Tile = ({ x, y, width, height }: TileDimensions) => {
   return (
     <>
       <polyline
