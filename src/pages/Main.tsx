@@ -25,14 +25,14 @@ const App: React.FC = () => {
     className: "dimension",
     id: "wall-width",
     label: "Wall Width",
-    extent: [tileWidth, 2000],
+    extent: [tileWidth, Infinity],
     initialValue: tileWidth*3
   });
   const [wallHeight, wallHeightInput] = useNumberInput({
     className: "dimension",
     id: "wall-height",
     label: "Wall Height",
-    extent: [tileHeight, 2000],
+    extent: [tileHeight, Infinity],
     initialValue: tileHeight*2
   });
   const [paddingWidth, paddingWidthInput] = useNumberInput({
