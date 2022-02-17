@@ -5,7 +5,7 @@
 .viz {
   margin: 25px;
   border: 1px solid #BBBBBB;
-  width: calc(100vw - 50px);
+  width: calc(100% - 50px);
   height: calc(100vh - 50px);
 }
 
