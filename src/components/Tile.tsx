@@ -1,25 +1,43 @@
 import { TileDimensions } from '../lib/tiles'
 
-const chamfer = 4;
+const MAX_CHAMFER = 4;
 
-// TODO: Chamfer breaks when tile is smaller that 8 due to rect getting negative width :-(
 const Tile = ({ x, y, width, height }: TileDimensions) => {
+  const xChamfer = Math.min(MAX_CHAMFER, width/2)
+  const yChamfer = Math.min(MAX_CHAMFER, height/2)
+
   return (
     <>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        className="tile"
+      />
       <polyline
-        points={`${x} ${y} ${x+width} ${y} ${x} ${y+height} ${x} ${y}`}
+        points={`
+          ${x} ${y}
+          ${x+width} ${y}
+          ${x+width-xChamfer} ${y+yChamfer}
+          ${x+xChamfer} ${y+yChamfer}
+          ${x+xChamfer} ${y+height-yChamfer}
+          ${x} ${y+height}
+          ${x} ${y}
+        `}
         className="shadow-tl"
       />
       <polyline
-        points={`${x} ${y+height} ${x+width} ${y} ${x+width} ${y+height} ${x} ${y+height}`}
+        points={`
+          ${x} ${y+height}
+          ${x+xChamfer} ${y+height-yChamfer}
+          ${x+width-xChamfer} ${y+height-yChamfer}
+          ${x+width-xChamfer} ${y+yChamfer}
+          ${x+width} ${y}
+          ${x+width} ${y+height}
+          ${x} ${y+height}
+        `}
         className="shadow-br"
-      />
-      <rect
-        x={x+chamfer}
-        y={y+chamfer}
-        width={width-chamfer*2}
-        height={height-chamfer*2}
-        className="tile"
       />
     </> 
   ) 
