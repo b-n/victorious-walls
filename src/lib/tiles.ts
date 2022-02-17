@@ -10,8 +10,6 @@ export enum SplitMethod {
   AtLeastHalfSplitTiles = 'Split is at least a half tile',
 }
 
-type HasSplitTiles = boolean;
-
 interface CartesianallySized {
   width: number
   height: number
@@ -31,8 +29,9 @@ export interface CalculationOptions {
 }
 
 type FullTiles = number;
+type RemainingSpace = number;
 
-type MaxFullTileResult = [FullTiles, HasSplitTiles]
+type MaxFullTileResult = [FullTiles, RemainingSpace]
 const maxFullTiles = (options: CalculationOptions, accessor: DimensionAccessor): MaxFullTileResult => {
 
   const length = accessor(options.canvas)
@@ -40,17 +39,17 @@ const maxFullTiles = (options: CalculationOptions, accessor: DimensionAccessor):
   const padding = accessor(options.padding)
   const spacing = accessor(options.spacing)
 
-
   // not above the minimum, return 0
   if (length <= padding * 2) {
-    return [0, true]
+    return [0, 0]
   }
 
   const lengthWithoutPadding = length - 2 * padding
 
-  // if the space isn't big enough for at least one tile, it'll always be 0
+  // if the space isn't big enough for at least one tile then
+  //  there will never be a full tile
   if (itemLength > lengthWithoutPadding) {
-    return [0, true]
+    return [0, lengthWithoutPadding - spacing]
   }
 
   // The first tile has no spacing, and it only complicates formula's. we can
@@ -60,43 +59,46 @@ const maxFullTiles = (options: CalculationOptions, accessor: DimensionAccessor):
 
   // Edge case, since we sometimes fit exactly tiles in the space (no extra splits)
   if (withoutPaddingAndTile % itemWithSpacing === 0) {
-    return [Math.floor(withoutPaddingAndTile / itemWithSpacing) + 1, false]
+    return [Math.floor(withoutPaddingAndTile / itemWithSpacing) + 1, 0]
   }
   
-  // Otherwise we assume we always have 2 spaces for the split tiles (technically
-  // only for the second split tile + adding the space back to the first, but it
-  // has the same net effect) - 1 because we need at least some tile to split
-  const remainingSpace = withoutPaddingAndTile - 2 * spacing - 1;
+  // otherwise we have 2 split tiles, both with spacing (since we already removed
+  //  the first tile without spacing)
+  const availableSpace = withoutPaddingAndTile - 2 * spacing;
 
-  // return how many full tiles which is that remaining space floored + the one
-  // we removed earlier
-  return [Math.floor(remainingSpace/itemWithSpacing)+1, true]
+  // + 1 since we're adding on the one we removed earlier
+  const maxFullTiles = Math.floor(availableSpace/itemWithSpacing) + 1
+
+  const spaceForSplits = lengthWithoutPadding - (maxFullTiles * itemWithSpacing + spacing);
+
+  // Edge case, it's possible we are trying to great split tiles in a 0 space 
+  if (spaceForSplits === 0) {
+    return [maxFullTiles - 1, itemLength + spacing]
+  }
+
+  return [maxFullTiles, spaceForSplits]
 }
 
 type DimensionAccessor = (obj: CartesianallySized) => number;
-type TileSizingFunction = ([fullTiles, hasSplits]: [FullTiles, HasSplitTiles], accessor: DimensionAccessor) => number[];
+type TileSizingFunction = ([fullTiles, splitSpace]: MaxFullTileResult, accessor: DimensionAccessor) => number[];
 
 const getTileSizes = (options: CalculationOptions): TileSizingFunction => {
-  return ([fullTiles, hasSplits]: MaxFullTileResult, accessor: DimensionAccessor): number[] => {
+  return ([fullTiles, splitSpace]: MaxFullTileResult, accessor: DimensionAccessor): number[] => {
     const itemLength = accessor(options.tile)
-    if (!hasSplits) {
+    const spacing = accessor(options.spacing);
+    if (splitSpace === 0) {
       return Array(fullTiles).fill(itemLength);
     }
 
-    // At least half a tile = removing one of the full tiles
-    if (options.splitMethod === SplitMethod.AtLeastHalfSplitTiles && fullTiles >= 1) {
+    // if we want at least half a tile in the split, and
+    //  the remaing space is less than a tile and it's spacing
+    //  just remove a full tile, the spacing will adjust
+    if (options.splitMethod === SplitMethod.AtLeastHalfSplitTiles && fullTiles >= 1 && splitSpace < itemLength - spacing) {
       fullTiles -= 1;
+      splitSpace += itemLength + spacing;
     }
 
-    const length = accessor(options.canvas);
-    const padding = accessor(options.padding);
-    const spacing = accessor(options.spacing);
-
-    // total spacing = total full tiles + 1 since there will be a space either side for the split tiles
-    const totalSpacing = (fullTiles + 1) * spacing
-    const availableForSplitTiles = (length) - (2 * padding) - totalSpacing - (fullTiles * itemLength)
-
-    const splitTileLength = availableForSplitTiles / 2
+    const splitTileLength = splitSpace / 2;
 
     return [ splitTileLength, ...Array(fullTiles).fill(itemLength), splitTileLength ]
   }
