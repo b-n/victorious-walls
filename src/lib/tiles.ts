@@ -66,7 +66,7 @@ const maxFullTiles = (options: CalculationOptions, accessor: DimensionAccessor):
   // Otherwise we assume we always have 2 spaces for the split tiles (technically
   // only for the second split tile + adding the space back to the first, but it
   // has the same net effect) - 1 because we need at least some tile to split
-  let remainingSpace = withoutPaddingAndTile - 2 * spacing - 1;
+  const remainingSpace = withoutPaddingAndTile - 2 * spacing - 1;
 
   // return how many full tiles which is that remaining space floored + the one
   // we removed earlier
@@ -84,7 +84,7 @@ const getTileSizes = (options: CalculationOptions): TileSizingFunction => {
     }
 
     // At least half a tile = removing one of the full tiles
-    if (options.splitMethod === SplitMethod.AtLeastHalfSplitTiles) {
+    if (options.splitMethod === SplitMethod.AtLeastHalfSplitTiles && fullTiles >= 1) {
       fullTiles -= 1;
     }
 
