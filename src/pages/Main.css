@@ -24,14 +24,14 @@
 
 .label {
   padding-right: 7px;
-  width: 200px;
+  width: 150px;
   text-align: right;
   display: inline-block;
   vertical-align: top;
 }
 
 .dimension .value {
-  width: 120px;  
+  width: 60px;  
   text-align: right;
   background-color: #181818;
 }

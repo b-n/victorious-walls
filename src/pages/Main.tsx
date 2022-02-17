@@ -3,65 +3,41 @@ import './Main.css';
 import { Tile } from '../components/Tile'
 import { TileSummaryTable } from '../components/TileSummaryTable'
 import { calculateTiles, SplitMethod } from '../lib/tiles'
-import { useNumberInput } from '../hooks/useNumberInput'
+import { useCartesianInput } from '../hooks/useCartesianInput'
 import { useRadioInput } from '../hooks/useRadioInput'
 
 const App: React.FC = () => {
-  const [tileWidth, tileWidthInput] = useNumberInput({
+  const [[tileWidth, tileHeight], tileInput] = useCartesianInput({
     className: "dimension",
-    id: "tile-width",
-    label: "Tile Width",
-    extent: [10, 200],
-    initialValue: 151
-  });
-  const [tileHeight, tileHeightInput] = useNumberInput({
+    id: "tile",
+    label: "Tile",
+    extentX: [10, 200],
+    extentY: [10, 200],
+    initialValues: [151, 151]
+  })
+  const [[wallWidth, wallHeight], wallInput] = useCartesianInput({
     className: "dimension",
-    id: "tile-height",
-    label: "Tile Height",
-    extent: [10, 200],
-    initialValue: 151
+    id: "wall",
+    label: "Wall",
+    extentX: [tileWidth, Infinity],
+    extentY: [tileHeight, Infinity],
+    initialValues: [tileWidth*3, tileHeight*3]
   });
-  const [wallWidth, wallWidthInput] = useNumberInput({
+  const [[paddingWidth, paddingHeight], paddingInput] = useCartesianInput({
     className: "dimension",
-    id: "wall-width",
-    label: "Wall Width",
-    extent: [tileWidth, Infinity],
-    initialValue: tileWidth*3
+    id: "padding",
+    label: "Padding",
+    extentX: [0, wallWidth/2 - 2],
+    extentY: [0, wallHeight/2 - 2],
+    initialValues: [3, 3]
   });
-  const [wallHeight, wallHeightInput] = useNumberInput({
-    className: "dimension",
-    id: "wall-height",
-    label: "Wall Height",
-    extent: [tileHeight, Infinity],
-    initialValue: tileHeight*2
-  });
-  const [paddingWidth, paddingWidthInput] = useNumberInput({
-    className: "dimension",
-    id: "padding-width",
-    label: "Padding Width",
-    extent: [0, wallWidth/2 - 2],
-    initialValue: 3
-  });
-  const [paddingHeight, paddingHeightInput] = useNumberInput({
-    className: "dimension",
-    id: "padding-height",
-    label: "Padding Height",
-    extent: [0, wallHeight/2 - 2],
-    initialValue: 3
-  });
-  const [spacingWidth, spacingWidthInput] = useNumberInput({
+  const [[spacingWidth, spacingHeight], spacingInput] = useCartesianInput({
     className: "dimension",
     id: "spacing-width",
     label: "Spacing Width",
-    extent: [0, (wallWidth - paddingWidth) / 2 - 2],
-    initialValue: 3
-  });
-  const [spacingHeight, spacingHeightInput] = useNumberInput({
-    className: "dimension",
-    id: "spacing-height",
-    label: "Spacing Height",
-    extent: [0, (wallHeight - paddingHeight) / 2 - 2],
-    initialValue: 3
+    extentX: [0, (wallWidth - paddingWidth) / 2 - 2],
+    extentY: [0, (wallHeight - paddingHeight) / 2 - 2],
+    initialValues: [3, 3]
   });
   const [splitMethod, splitMethodInput] = useRadioInput<SplitMethod>({
     className: "dimension",
@@ -97,14 +73,10 @@ const App: React.FC = () => {
 
   return (
     <div>
-      {tileWidthInput}
-      {tileHeightInput}
-      {wallWidthInput}
-      {wallHeightInput}
-      {paddingWidthInput}
-      {paddingHeightInput}
-      {spacingWidthInput}
-      {spacingHeightInput}
+      {tileInput}
+      {wallInput}
+      {paddingInput}
+      {spacingInput}
       {splitMethodInput}
       <div className="tile-summary">
         <TileSummaryTable
