@@ -6,8 +6,8 @@ export interface TileDimensions {
 }
 
 export enum SplitMethod {
-  MostFullTiles = 'Most Full Tiles',
-  AtLeastHalfSplitTiles = 'Split is at least a half tile',
+  MostFullTiles = 'Most uncut tiles',
+  AtLeastHalfSplitTiles = 'At least a half tile',
 }
 
 interface CartesianallySized {
