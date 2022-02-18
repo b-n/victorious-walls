@@ -24,7 +24,7 @@ const useRadioInput = <T extends unknown>({
       <div className="label">{label}</div>
       <div className="radio-options">
         {options.map((option: T) => (
-          <div className="radio-option">
+          <div key={option as string} className="radio-option">
             <input
               checked={value === option}
               id={`${id}-${option}`}
