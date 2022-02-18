@@ -2,6 +2,7 @@ import React from 'react';
 import './Main.css';
 import { Tile } from '../components/Tile'
 import { TileSummaryTable } from '../components/TileSummaryTable'
+import { Visualizer } from '../components/Visualizer'
 import { calculateTiles, SplitMethod } from '../lib/tiles'
 import { useCartesianInput } from '../hooks/useCartesianInput'
 import { useRadioInput } from '../hooks/useRadioInput'
@@ -84,16 +85,21 @@ const App: React.FC = () => {
           className="summary-table"
         />
       </div>
-      <svg className="viz">
+      <Visualizer
+        width={wallWidth}
+        height={wallHeight}
+        className="viz"
+      >
         {tiles.map(({width, height, x, y}) => (
           <Tile
+            key={`${x}-${y}`}
             x={x}
             y={y}
             width={width}
             height={height}
           />
         ))}
-      </svg>
+      </Visualizer>
     </div>
   );
 }
