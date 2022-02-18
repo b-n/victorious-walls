@@ -5,36 +5,46 @@ interface TileSummaryTableOptions {
   className?: string;
 }
 
+interface SummaryItem {
+  width: number;
+  height: number;
+  quantity: number;
+}
+
 const TileSummaryTable = ({ tiles, className = ''}: TileSummaryTableOptions) => {
 
-  const tileSummaryMap = tiles
-    .reduce((acc, t) => {
-      const key = `${t.width} x ${t.height}`;
-      if (!acc[key]) {
-        acc[key] = 0
-      }
-      acc[key] += 1
-      return acc;
-    }, {} as Record<string, number>)
-
-  const tileSummary = Object.keys(tileSummaryMap).map((key) => ({
-    label: key,
-    count: tileSummaryMap[key]
-  }))
+  const tileSummary = Object.values(
+    tiles
+      .reduce((acc, t) => {
+        const { width, height } = t;
+        const key = `${width}-${height}`;
+        if (!acc[key]) {
+          acc[key] = {
+            width,
+            height,
+            quantity: 0
+          }
+        }
+        acc[key].quantity += 1
+        return acc;
+      }, {} as Record<string, SummaryItem>)
+  )
 
   return (
     <table className={className}>
       <thead>
         <tr>
-          <th className="header header-label">Label</th>
-          <th className="header header-count">Count</th>
+          <th className="header header-label">Width</th>
+          <th className="header header-label">Height</th>
+          <th className="header header-quantity">Count</th>
         </tr>
       </thead>
       <tbody>
-        {tileSummary.map((summaryItem) => (
-          <tr>
-            <td className="row row-label">{summaryItem.label}</td>
-            <td className="row row-count">{summaryItem.count}</td>
+        {tileSummary.map(({ width, height, quantity }) => (
+          <tr key={`${width}x${height}`}>
+            <td className="row row-label">{width}</td>
+            <td className="row row-label">{height}</td>
+            <td className="row row-quantity">{quantity}</td>
           </tr>
         ))}
       </tbody>

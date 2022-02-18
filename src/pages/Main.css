@@ -56,11 +56,14 @@
   display: block;
 }
 
-.summary-table .header-label {
-  width: 200px;
-  text-align: right;
+.summary-table {
+  margin: 10px 10px;
 }
 
-.summary-table .row-label {
-  text-align: right;
+.summary-table .header-label {
+  width: 60px;
+}
+
+.summary-table .row {
+  font-family: monospace;
 }
